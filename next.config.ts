@@ -18,10 +18,18 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+        port: "",
+        pathname: "/images/dvhf52ob/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        port: "",
         pathname: "/images/**",
       },
     ],
     formats: ["image/webp", "image/avif"],
+    domains: ["cdn.sanity.io"],
   },
 
   // Compression
