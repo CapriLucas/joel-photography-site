@@ -1,24 +1,32 @@
 import { Metadata } from "next";
 import ExploreClient from "./explore-client";
-import { generateMetadata as generateSiteMetadata } from "@/lib/metadata";
+import { generateMetadataFromCMS } from "@/lib/metadata";
 import { cmsClient } from "@/lib/cms/client";
-import { Photo } from "@/lib/cms/types";
+import { Photo, ExplorePage } from "@/lib/cms/types";
 
-export const metadata: Metadata = generateSiteMetadata({
-  title: "Explore Wildlife Gallery",
-  description:
-    "Browse through a stunning collection of wildlife photography. Search and filter by location, tags, and featured photos to discover the beauty of nature.",
-  path: "/explore",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return generateMetadataFromCMS({
+    title: "Explore Wildlife Gallery",
+    description:
+      "Browse through a stunning collection of wildlife photography. Search and filter by location, tags, and featured photos to discover the beauty of nature.",
+    path: "/explore",
+  });
+}
 
 export default async function ExplorePage() {
-  // Fetch photos on server-side to avoid CORS issues
+  // Fetch photos and page content on server-side to avoid CORS issues
   let initialPhotos: Photo[] = [];
+  let explorePageContent: ExplorePage;
+
   try {
-    initialPhotos = await cmsClient.getPhotos();
+    [initialPhotos, explorePageContent] = await Promise.all([
+      cmsClient.getPhotos(),
+      cmsClient.getExplorePage(),
+    ]);
   } catch (error) {
-    console.error("Server-side photo fetch error:", error);
+    console.error("Server-side fetch error:", error);
+    explorePageContent = await cmsClient.getExplorePage(); // fallback to defaults
   }
 
-  return <ExploreClient initialPhotos={initialPhotos} />;
+  return <ExploreClient initialPhotos={initialPhotos} pageContent={explorePageContent} />;
 }

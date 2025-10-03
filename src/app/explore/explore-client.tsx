@@ -4,13 +4,14 @@ import { useState, useMemo } from 'react';
 import { Camera } from 'lucide-react';
 import PhotoGrid from '@/components/photo-grid';
 import PhotoFilters from '@/components/photo-filters';
-import { Photo } from '@/lib/cms/types';
+import { Photo, ExplorePage } from '@/lib/cms/types';
 
 interface ExploreClientProps {
   initialPhotos: Photo[];
+  pageContent: ExplorePage;
 }
 
-export default function ExploreClient({ initialPhotos }: ExploreClientProps) {
+export default function ExploreClient({ initialPhotos, pageContent }: ExploreClientProps) {
   const [photos] = useState<Photo[]>(initialPhotos);
   const [loading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -64,7 +65,7 @@ export default function ExploreClient({ initialPhotos }: ExploreClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading photos...</p>
+            <p className="mt-4 text-gray-600">{pageContent.loadingText}</p>
           </div>
         </div>
       </div>
@@ -77,11 +78,10 @@ export default function ExploreClient({ initialPhotos }: ExploreClientProps) {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-4">
-            Explore Wildlife Gallery
+            {pageContent.title}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover the beauty of wildlife through my lens. Browse through a collection of
-            photographs capturing nature&apos;s most incredible moments.
+            {pageContent.description}
           </p>
           <div className="mt-4 text-sm text-gray-500">
             {photos.length} photos • {filteredPhotos.length} showing
@@ -98,6 +98,11 @@ export default function ExploreClient({ initialPhotos }: ExploreClientProps) {
             onSearchChange={setSearchQuery}
             onTagsChange={setSelectedTags}
             onFeaturedChange={setFeaturedFilter}
+            filterLabels={pageContent.filterLabels}
+            searchPlaceholder={pageContent.searchPlaceholder}
+            filtersButtonText={pageContent.filtersButtonText}
+            activeFiltersText={pageContent.activeFiltersText}
+            clearAllFiltersText={pageContent.clearAllFiltersText}
           />
         </div>
 
@@ -108,10 +113,10 @@ export default function ExploreClient({ initialPhotos }: ExploreClientProps) {
           <div className="text-center py-12">
             <Camera className="mx-auto h-16 w-16 text-gray-400" />
             <h3 className="mt-4 text-lg font-medium text-gray-900">
-              No photos found
+              {pageContent.emptyStateTitle}
             </h3>
             <p className="mt-2 text-gray-500">
-              Try adjusting your search criteria or clear the filters to see all photos.
+              {pageContent.emptyStateDescription}
             </p>
           </div>
         )}

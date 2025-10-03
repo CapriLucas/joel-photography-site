@@ -50,6 +50,27 @@ export class CMSClient {
   async searchPhotos(query: string) {
     return this.adapter.searchPhotos(query);
   }
+
+  // Site content methods
+  async getSiteSettings() {
+    return this.adapter.getSiteSettings();
+  }
+
+  async getHomePage() {
+    return this.adapter.getHomePage();
+  }
+
+  async getExplorePage() {
+    return this.adapter.getExplorePage();
+  }
+
+  async getNavigation() {
+    return this.adapter.getNavigation();
+  }
+
+  async getFooter() {
+    return this.adapter.getFooter();
+  }
 }
 
 // Global CMS client instance

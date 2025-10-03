@@ -6,13 +6,13 @@ import { Camera, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { Navigation as NavigationData } from '@/lib/cms/types';
 
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Explore', href: '/explore' },
-];
+interface NavigationProps {
+  navigationData: NavigationData;
+}
 
-export default function Navigation() {
+export default function Navigation({ navigationData }: NavigationProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -24,13 +24,13 @@ export default function Navigation() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Camera className="h-8 w-8 text-gray-800" />
-              <span className="text-xl font-bold text-gray-900">Joel Photography</span>
+              <span className="text-xl font-bold text-gray-900">{navigationData.brandName}</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            {navigation.map((item) => (
+            {navigationData.menuItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -52,7 +52,7 @@ export default function Navigation() {
               variant="ghost"
               size="sm"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
+              aria-label={navigationData.mobileMenuToggleLabel}
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -67,7 +67,7 @@ export default function Navigation() {
         {mobileMenuOpen && (
           <div className="md:hidden">
             <div className="space-y-1 pb-3 pt-2">
-              {navigation.map((item) => (
+              {navigationData.menuItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}

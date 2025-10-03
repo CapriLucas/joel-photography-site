@@ -1,5 +1,5 @@
 import { CMSAdapter } from '../interface';
-import { Photo, PhotoCollection, QueryOptions } from '../types';
+import { Photo, PhotoCollection, QueryOptions, SiteSettings, HomePage, ExplorePage, Navigation, Footer } from '../types';
 
 export class MockAdapter implements CMSAdapter {
   private mockPhotos: Photo[] = [
@@ -164,5 +164,138 @@ export class MockAdapter implements CMSAdapter {
 
   async searchPhotos(query: string): Promise<Photo[]> {
     return this.getPhotos({ search: query });
+  }
+
+  async getSiteSettings(): Promise<SiteSettings> {
+    return {
+      siteName: "Joel Wildlife Photography",
+      siteDescription: "Professional wildlife photography capturing nature's most beautiful moments",
+      siteUrl: "https://joelphotography.com",
+      defaultMetaTitle: "Joel Wildlife Photography - Professional Wildlife Photography",
+      defaultMetaDescription: "Discover stunning wildlife photography from around the world. Professional wildlife photographer capturing nature's most beautiful moments.",
+      socialMedia: {
+        instagram: "@joelphotography",
+        facebook: "joelphotography",
+        twitter: "@joelphoto",
+      },
+      googleAnalyticsId: "GA-XXXXXXXXX",
+    };
+  }
+
+  async getHomePage(): Promise<HomePage> {
+    return {
+      heroSection: {
+        title: "Wild Moments Captured",
+        subtitle: "Discover the beauty of wildlife through professional photography",
+        description: "Capturing the beauty and majesty of wildlife in their natural habitats. Experience the raw emotion and incredible moments of nature through my lens.",
+        buttons: [
+          {
+            text: "Explore Gallery",
+            link: "/explore",
+            style: "primary" as const,
+            icon: "eye" as const,
+          },
+          {
+            text: "Featured Work",
+            link: "/explore",
+            style: "secondary" as const,
+            icon: "camera" as const,
+          },
+        ],
+      },
+      featuredSection: {
+        title: "Featured Work",
+        description: "A curated selection of my best wildlife photography from expeditions around the world",
+        showFeaturedPhotos: true,
+      },
+      aboutSection: {
+        title: "About the Artist",
+        description: "I'm a passionate wildlife photographer dedicated to capturing nature's most beautiful and fleeting moments. With over 10 years of experience photographing wildlife across six continents, I strive to create images that tell the story of our planet's incredible biodiversity.",
+        ctaText: "View Full Gallery",
+        ctaLink: "/explore",
+      },
+      statsCard: {
+        title: "Professional Wildlife Photographer",
+        subtitle: "Capturing nature's finest moments",
+        statistics: [
+          { number: "10+", label: "Years Experience" },
+          { number: "50+", label: "Species Captured" },
+          { number: "15+", label: "Countries Visited" },
+          { number: "1000+", label: "Photos Taken" },
+        ],
+      },
+    };
+  }
+
+  async getExplorePage(): Promise<ExplorePage> {
+    return {
+      title: "Explore Wildlife Photography",
+      description: "Browse through our extensive collection of stunning wildlife photographs from around the world",
+      loadingText: "Loading amazing wildlife photos...",
+      emptyStateTitle: "No photos found",
+      emptyStateDescription: "Try adjusting your search criteria or filters to discover more wildlife photography.",
+      searchPlaceholder: "Search by animal, location, or tag...",
+      filtersButtonText: "Filters",
+      activeFiltersText: "Active filters:",
+      clearAllFiltersText: "Clear all filters",
+      filterLabels: {
+        photoType: "Photo Type",
+        allPhotos: "All Photos",
+        featuredOnly: "Featured Only",
+        regularOnly: "Regular Only",
+        tags: "Tags",
+      },
+    };
+  }
+
+  async getNavigation(): Promise<Navigation> {
+    return {
+      brandName: "Joel Photography",
+      menuItems: [
+        { name: "Home", href: "/", order: 0 },
+        { name: "Explore", href: "/explore", order: 1 },
+        { name: "About", href: "/about", order: 2 },
+        { name: "Contact", href: "/contact", order: 3 },
+      ],
+      mobileMenuToggleLabel: "Toggle navigation menu",
+    };
+  }
+
+  async getFooter(): Promise<Footer> {
+    return {
+      brandName: "Joel Photography",
+      brandDescription: "Professional wildlife photography capturing nature's most beautiful and fleeting moments from expeditions around the world.",
+      contactSectionTitle: "Get in Touch",
+      email: "hello@joelphotography.com",
+      location: "Based in Denver, Colorado, USA",
+      phone: "+1 (555) 123-4567",
+      quickLinksSectionTitle: "Quick Links",
+      quickLinks: [
+        { name: "Home", href: "/", order: 0 },
+        { name: "Gallery", href: "/explore", order: 1 },
+        { name: "About", href: "/about", order: 2 },
+        { name: "Contact", href: "/contact", order: 3 },
+      ],
+      additionalSections: [
+        {
+          title: "Services",
+          links: [
+            { name: "Wildlife Photography", href: "/services/wildlife" },
+            { name: "Nature Prints", href: "/services/prints" },
+            { name: "Photography Tours", href: "/services/tours" },
+          ],
+        },
+        {
+          title: "Resources",
+          links: [
+            { name: "Photography Tips", href: "/blog" },
+            { name: "Equipment Guide", href: "/equipment" },
+            { name: "Conservation", href: "/conservation" },
+          ],
+        },
+      ],
+      copyrightText: "Joel Photography. All rights reserved.",
+      tagline: "Capturing wild moments since 2014",
+    };
   }
 }

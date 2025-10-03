@@ -20,6 +20,17 @@ interface PhotoFiltersProps {
   selectedTags: string[];
   searchQuery: string;
   featuredFilter: boolean | undefined;
+  filterLabels: {
+    photoType: string;
+    allPhotos: string;
+    featuredOnly: string;
+    regularOnly: string;
+    tags: string;
+  };
+  searchPlaceholder: string;
+  filtersButtonText: string;
+  activeFiltersText: string;
+  clearAllFiltersText: string;
 }
 
 export default function PhotoFilters({
@@ -30,6 +41,11 @@ export default function PhotoFilters({
   selectedTags,
   searchQuery,
   featuredFilter,
+  filterLabels,
+  searchPlaceholder,
+  filtersButtonText,
+  activeFiltersText,
+  clearAllFiltersText,
 }: PhotoFiltersProps) {
   const [showFilters, setShowFilters] = useState(false);
 
@@ -55,7 +71,7 @@ export default function PhotoFilters({
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search photos by title, description, location, or tags..."
+            placeholder={searchPlaceholder}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="pl-10"
@@ -67,7 +83,7 @@ export default function PhotoFilters({
           className="flex items-center gap-2"
         >
           <Filter className="h-4 w-4" />
-          Filters
+          {filtersButtonText}
           {hasActiveFilters && (
             <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
               {(selectedTags.length + (featuredFilter !== undefined ? 1 : 0))}
@@ -79,7 +95,7 @@ export default function PhotoFilters({
       {/* Active Filters Display */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-gray-600">Active filters:</span>
+          <span className="text-sm text-gray-600">{activeFiltersText}</span>
 
           {featuredFilter !== undefined && (
             <Badge variant="outline" className="flex items-center gap-1">
@@ -107,7 +123,7 @@ export default function PhotoFilters({
             onClick={clearAllFilters}
             className="text-gray-500 hover:text-gray-700"
           >
-            Clear all
+            {clearAllFiltersText}
           </Button>
         </div>
       )}
@@ -121,28 +137,28 @@ export default function PhotoFilters({
           <CardContent className="space-y-4">
             {/* Featured Filter */}
             <div>
-              <h4 className="text-sm font-medium text-gray-900 mb-2">Photo Type</h4>
+              <h4 className="text-sm font-medium text-gray-900 mb-2">{filterLabels.photoType}</h4>
               <div className="flex gap-2">
                 <Button
                   variant={featuredFilter === undefined ? "default" : "outline"}
                   size="sm"
                   onClick={() => onFeaturedChange(undefined)}
                 >
-                  All Photos
+                  {filterLabels.allPhotos}
                 </Button>
                 <Button
                   variant={featuredFilter === true ? "default" : "outline"}
                   size="sm"
                   onClick={() => onFeaturedChange(true)}
                 >
-                  Featured Only
+                  {filterLabels.featuredOnly}
                 </Button>
                 <Button
                   variant={featuredFilter === false ? "default" : "outline"}
                   size="sm"
                   onClick={() => onFeaturedChange(false)}
                 >
-                  Regular Only
+                  {filterLabels.regularOnly}
                 </Button>
               </div>
             </div>
@@ -151,7 +167,7 @@ export default function PhotoFilters({
             {availableTags.length > 0 && (
               <div>
                 <h4 className="text-sm font-medium text-gray-900 mb-2">
-                  Tags ({selectedTags.length} selected)
+                  {filterLabels.tags} ({selectedTags.length} selected)
                 </h4>
                 <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                   {availableTags.map((tag) => (
