@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { generateMetadata as generateSiteMetadata, generateMetadataFromCMS, generateStructuredData } from "@/lib/metadata";
+import {
+  generateMetadata as generateSiteMetadata,
+  generateStructuredData,
+} from "@/lib/metadata";
 
 export const metadata: Metadata = generateSiteMetadata();
 
@@ -24,18 +27,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [navigationData, footerData, dynamicStructuredData] = await Promise.all([
-    cmsClient.getNavigation(),
-    cmsClient.getFooter(),
-    generateStructuredData(),
-  ]);
+  const [navigationData, footerData, dynamicStructuredData] = await Promise.all(
+    [cmsClient.getNavigation(), cmsClient.getFooter(), generateStructuredData()]
+  );
 
   return (
     <html lang="en">
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(dynamicStructuredData) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(dynamicStructuredData),
+          }}
         />
       </head>
       <body

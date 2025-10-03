@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import ExploreClient from "./explore-client";
 import { generateMetadataFromCMS } from "@/lib/metadata";
 import { cmsClient } from "@/lib/cms/client";
-import { Photo, ExplorePage } from "@/lib/cms/types";
+import type { Photo, ExplorePage as TExplorePage } from "@/lib/cms/types";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateMetadataFromCMS({
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ExplorePage() {
   // Fetch photos and page content on server-side to avoid CORS issues
   let initialPhotos: Photo[] = [];
-  let explorePageContent: ExplorePage;
+  let explorePageContent: TExplorePage;
 
   try {
     [initialPhotos, explorePageContent] = await Promise.all([
@@ -28,5 +28,10 @@ export default async function ExplorePage() {
     explorePageContent = await cmsClient.getExplorePage(); // fallback to defaults
   }
 
-  return <ExploreClient initialPhotos={initialPhotos} pageContent={explorePageContent} />;
+  return (
+    <ExploreClient
+      initialPhotos={initialPhotos}
+      pageContent={explorePageContent}
+    />
+  );
 }

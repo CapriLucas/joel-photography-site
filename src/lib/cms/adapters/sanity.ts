@@ -60,39 +60,43 @@ export class SanityAdapter implements CMSAdapter {
     return builder.image(source);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private convertPortableTextToString(portableText: any[]): string {
     if (!portableText || !Array.isArray(portableText)) return "";
 
     return portableText
       .map((block) => {
         if (block._type === "block" && block.children) {
-          return block.children
-            .map((child: any) => {
-              let text = child.text || "";
+          return (
+            block.children
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((child: any) => {
+                let text = child.text || "";
 
-              // Apply formatting based on marks
-              if (child.marks && child.marks.length > 0) {
-                child.marks.forEach((mark: string) => {
-                  switch (mark) {
-                    case "strong":
-                      text = `**${text}**`;
-                      break;
-                    case "em":
-                      text = `*${text}*`;
-                      break;
-                    case "underline":
-                      text = `<u>${text}</u>`;
-                      break;
-                    case "code":
-                      text = `\`${text}\``;
-                      break;
-                  }
-                });
-              }
+                // Apply formatting based on marks
+                if (child.marks && child.marks.length > 0) {
+                  child.marks.forEach((mark: string) => {
+                    switch (mark) {
+                      case "strong":
+                        text = `**${text}**`;
+                        break;
+                      case "em":
+                        text = `*${text}*`;
+                        break;
+                      case "underline":
+                        text = `<u>${text}</u>`;
+                        break;
+                      case "code":
+                        text = `\`${text}\``;
+                        break;
+                    }
+                  });
+                }
 
-              return text;
-            })
-            .join("");
+                return text;
+              })
+              .join("")
+          );
         }
         return "";
       })
@@ -322,20 +326,28 @@ export class SanityAdapter implements CMSAdapter {
         // Return error values if no settings found
         return {
           siteName: "[SANITY ERROR: siteSettings document not found]",
-          siteDescription: "[SANITY ERROR: Create siteSettings in Sanity Studio]",
+          siteDescription:
+            "[SANITY ERROR: Create siteSettings in Sanity Studio]",
           siteUrl: "",
           defaultMetaTitle: "[SANITY ERROR: No meta title configured]",
-          defaultMetaDescription: "[SANITY ERROR: No meta description configured]",
+          defaultMetaDescription:
+            "[SANITY ERROR: No meta description configured]",
           socialMedia: {},
         };
       }
 
       return {
         siteName: result.siteName || "[SANITY ERROR: Site name not configured]",
-        siteDescription: result.siteDescription || "[SANITY ERROR: Site description not configured]",
+        siteDescription:
+          result.siteDescription ||
+          "[SANITY ERROR: Site description not configured]",
         siteUrl: result.siteUrl || "",
-        defaultMetaTitle: result.defaultMetaTitle || "[SANITY ERROR: Meta title not configured]",
-        defaultMetaDescription: result.defaultMetaDescription || "[SANITY ERROR: Meta description not configured]",
+        defaultMetaTitle:
+          result.defaultMetaTitle ||
+          "[SANITY ERROR: Meta title not configured]",
+        defaultMetaDescription:
+          result.defaultMetaDescription ||
+          "[SANITY ERROR: Meta description not configured]",
         socialMedia: result.socialMedia || {},
         googleAnalyticsId: result.googleAnalyticsId,
         favicon: result.favicon?.asset?.url,
@@ -345,10 +357,12 @@ export class SanityAdapter implements CMSAdapter {
       console.error("Error fetching site settings from Sanity:", error);
       return {
         siteName: "[SANITY CONNECTION ERROR: Cannot fetch site name]",
-        siteDescription: "[SANITY CONNECTION ERROR: Cannot fetch site description]",
+        siteDescription:
+          "[SANITY CONNECTION ERROR: Cannot fetch site description]",
         siteUrl: "",
         defaultMetaTitle: "[SANITY CONNECTION ERROR: Cannot fetch meta title]",
-        defaultMetaDescription: "[SANITY CONNECTION ERROR: Cannot fetch meta description]",
+        defaultMetaDescription:
+          "[SANITY CONNECTION ERROR: Cannot fetch meta description]",
         socialMedia: {},
       };
     }
@@ -389,18 +403,21 @@ export class SanityAdapter implements CMSAdapter {
         return {
           heroSection: {
             title: "[SANITY DOCUMENT ERROR: homePage document not found]",
-            subtitle: "[SANITY DOCUMENT ERROR: Create homePage document in Sanity Studio]",
+            subtitle:
+              "[SANITY DOCUMENT ERROR: Create homePage document in Sanity Studio]",
             description: "[SANITY DOCUMENT ERROR: Missing hero description]",
             buttons: [],
           },
           featuredSection: {
             title: "[SANITY DOCUMENT ERROR: Featured section not configured]",
-            description: "[SANITY DOCUMENT ERROR: Configure featured section in Sanity]",
+            description:
+              "[SANITY DOCUMENT ERROR: Configure featured section in Sanity]",
             showFeaturedPhotos: true,
           },
           aboutSection: {
             title: "[SANITY DOCUMENT ERROR: About section not configured]",
-            description: "[SANITY DOCUMENT ERROR: Configure about section in Sanity]",
+            description:
+              "[SANITY DOCUMENT ERROR: Configure about section in Sanity]",
             ctaText: "[SANITY ERROR: No CTA configured]",
             ctaLink: "/explore",
           },
@@ -415,13 +432,20 @@ export class SanityAdapter implements CMSAdapter {
       return {
         heroSection: {
           title: result.heroTitle || "[SANITY ERROR: Hero title not found]",
-          subtitle: result.heroSubtitle || "[SANITY ERROR: Hero subtitle not found]",
-          description: result.heroDescription || "[SANITY ERROR: Hero description not found]",
+          subtitle:
+            result.heroSubtitle || "[SANITY ERROR: Hero subtitle not found]",
+          description:
+            result.heroDescription ||
+            "[SANITY ERROR: Hero description not found]",
           buttons: result.heroButtons || [],
         },
         featuredSection: {
-          title: result.featuredSectionTitle || "[SANITY ERROR: Featured title not found]",
-          description: result.featuredSectionDescription || "[SANITY ERROR: Featured description not found]",
+          title:
+            result.featuredSectionTitle ||
+            "[SANITY ERROR: Featured title not found]",
+          description:
+            result.featuredSectionDescription ||
+            "[SANITY ERROR: Featured description not found]",
           showFeaturedPhotos: true,
         },
         aboutSection: {
@@ -429,12 +453,18 @@ export class SanityAdapter implements CMSAdapter {
           description:
             this.convertPortableTextToString(result.aboutText) ||
             "[SANITY ERROR: About description not found]",
-          ctaText: result.aboutButtonText || "[SANITY ERROR: About CTA text not found]",
+          ctaText:
+            result.aboutButtonText ||
+            "[SANITY ERROR: About CTA text not found]",
           ctaLink: result.aboutButtonLink || "/explore",
         },
         statsCard: {
-          title: result.statsCardTitle || "[SANITY ERROR: Stats card title not found]",
-          subtitle: result.statsCardSubtitle || "[SANITY ERROR: Stats card subtitle not found]",
+          title:
+            result.statsCardTitle ||
+            "[SANITY ERROR: Stats card title not found]",
+          subtitle:
+            result.statsCardSubtitle ||
+            "[SANITY ERROR: Stats card subtitle not found]",
           statistics: result.statistics || [],
         },
       };
@@ -444,7 +474,8 @@ export class SanityAdapter implements CMSAdapter {
         heroSection: {
           title: "[SANITY CONNECTION ERROR: Cannot fetch hero title]",
           subtitle: "[SANITY CONNECTION ERROR: Cannot fetch hero subtitle]",
-          description: "[SANITY CONNECTION ERROR: Cannot fetch hero description]",
+          description:
+            "[SANITY CONNECTION ERROR: Cannot fetch hero description]",
           buttons: [
             {
               text: "[SANITY ERROR: Button not loaded]",
@@ -456,12 +487,14 @@ export class SanityAdapter implements CMSAdapter {
         },
         featuredSection: {
           title: "[SANITY CONNECTION ERROR: Cannot fetch featured title]",
-          description: "[SANITY CONNECTION ERROR: Cannot fetch featured description]",
+          description:
+            "[SANITY CONNECTION ERROR: Cannot fetch featured description]",
           showFeaturedPhotos: true,
         },
         aboutSection: {
           title: "[SANITY CONNECTION ERROR: Cannot fetch about title]",
-          description: "[SANITY CONNECTION ERROR: Cannot fetch about description]",
+          description:
+            "[SANITY CONNECTION ERROR: Cannot fetch about description]",
           ctaText: "[SANITY ERROR: CTA not loaded]",
           ctaLink: "/explore",
         },
@@ -594,14 +627,13 @@ export class SanityAdapter implements CMSAdapter {
       }
 
       return {
-        brandName: result.brandName || "[SANITY ERROR: Brand name not configured]",
+        brandName:
+          result.brandName || "[SANITY ERROR: Brand name not configured]",
         menuItems: result.menuItems
           ? result.menuItems.sort(
               (a: { order: number }, b: { order: number }) => a.order - b.order
             )
-          : [
-              { name: "[SANITY ERROR: No menu items]", href: "/", order: 0 },
-            ],
+          : [{ name: "[SANITY ERROR: No menu items]", href: "/", order: 0 }],
         mobileMenuToggleLabel:
           result.mobileMenuToggleLabel || "[SANITY ERROR: No toggle label]",
       };
@@ -610,9 +642,14 @@ export class SanityAdapter implements CMSAdapter {
       return {
         brandName: "[SANITY CONNECTION ERROR: Cannot fetch brand name]",
         menuItems: [
-          { name: "[SANITY CONNECTION ERROR: Cannot fetch menu]", href: "/", order: 0 },
+          {
+            name: "[SANITY CONNECTION ERROR: Cannot fetch menu]",
+            href: "/",
+            order: 0,
+          },
         ],
-        mobileMenuToggleLabel: "[SANITY CONNECTION ERROR: Cannot fetch toggle label]",
+        mobileMenuToggleLabel:
+          "[SANITY CONNECTION ERROR: Cannot fetch toggle label]",
       };
     }
   }
