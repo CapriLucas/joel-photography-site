@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output
+
+# Studio
+studio/node_modules
+studio/dist
+studio/.sanity
+
+# Docker
+Dockerfile
+.dockerignore
+docker-build.sh

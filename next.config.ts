@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-dialog"],
   },
 
+  // Docker-specific configuration
+  output: 'standalone',
+
   // Image optimization for external domains
   images: {
     remotePatterns: [
