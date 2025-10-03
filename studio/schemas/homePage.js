@@ -80,6 +80,23 @@ export default {
       validation: Rule => Rule.max(3)
     },
 
+    // Carousel Configuration
+    {
+      name: 'carouselAutoplayEnabled',
+      title: 'Enable Carousel Auto-play',
+      type: 'boolean',
+      description: 'Enable automatic slideshow for the featured photos carousel',
+      initialValue: true
+    },
+    {
+      name: 'carouselAutoplayInterval',
+      title: 'Auto-play Interval (seconds)',
+      type: 'number',
+      description: 'Time between automatic slide transitions (3-10 seconds)',
+      validation: Rule => Rule.min(3).max(10).integer(),
+      initialValue: 5
+    },
+
     // Featured Section
     {
       name: 'featuredSectionTitle',

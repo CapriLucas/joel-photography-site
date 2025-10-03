@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
@@ -8,6 +9,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselApi,
 } from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
 import { Photo } from '@/lib/cms/types';
@@ -16,9 +18,52 @@ import { MapPin, Calendar } from 'lucide-react';
 interface PhotoCarouselProps {
   photos: Photo[];
   className?: string;
+  autoplayEnabled?: boolean;
+  intervalSeconds?: number;
 }
 
-export default function PhotoCarousel({ photos, className }: PhotoCarouselProps) {
+export default function PhotoCarousel({
+  photos,
+  className,
+  autoplayEnabled = true,
+  intervalSeconds = 5
+}: PhotoCarouselProps) {
+  const [api, setApi] = useState<CarouselApi>();
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-play logic
+  useEffect(() => {
+    if (!api || !autoplayEnabled || isPaused || photos.length <= 1) {
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      api.scrollNext();
+    }, intervalSeconds * 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [api, autoplayEnabled, intervalSeconds, isPaused, photos.length]);
+
+  // Pause on hover/focus
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+  const handleFocus = () => setIsPaused(true);
+  const handleBlur = () => setIsPaused(false);
+
+  // Respect reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      setIsPaused(true);
+    }
+  }, []);
+
   if (!photos.length) {
     return (
       <div className="text-center py-8">
@@ -29,7 +74,18 @@ export default function PhotoCarousel({ photos, className }: PhotoCarouselProps)
 
   return (
     <div className={className}>
-      <Carousel className="w-full">
+      <Carousel
+        className="w-full"
+        setApi={setApi}
+        opts={{
+          loop: true,
+          align: "start",
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
         <CarouselContent>
           {photos.map((photo) => (
             <CarouselItem key={photo.id}>

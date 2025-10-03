@@ -208,6 +208,10 @@ export class MockAdapter implements CMSAdapter {
         description: "A curated selection of my best wildlife photography from expeditions around the world",
         showFeaturedPhotos: true,
       },
+      carousel: {
+        autoplayEnabled: true,
+        intervalSeconds: 5,
+      },
       aboutSection: {
         title: "About the Artist",
         description: "I'm a passionate wildlife photographer dedicated to capturing nature's most beautiful and fleeting moments. With over 10 years of experience photographing wildlife across six continents, I strive to create images that tell the story of our planet's incredible biodiversity.",

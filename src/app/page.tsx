@@ -64,7 +64,12 @@ export default async function Home() {
             </div>
 
           {featuredPhotos.length > 0 ? (
-            <PhotoCarousel photos={featuredPhotos} className="max-w-6xl mx-auto" />
+            <PhotoCarousel
+              photos={featuredPhotos}
+              className="max-w-6xl mx-auto"
+              autoplayEnabled={homePageContent.carousel?.autoplayEnabled}
+              intervalSeconds={homePageContent.carousel?.intervalSeconds}
+            />
           ) : (
             <div className="text-center py-12">
               <Camera className="mx-auto h-12 w-12 text-gray-400" />

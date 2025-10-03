@@ -380,6 +380,8 @@ export class SanityAdapter implements CMSAdapter {
           style,
           icon
         },
+        carouselAutoplayEnabled,
+        carouselAutoplayInterval,
         featuredSectionTitle,
         featuredSectionDescription,
         featuredEmptyStateTitle,
@@ -414,6 +416,10 @@ export class SanityAdapter implements CMSAdapter {
               "[SANITY DOCUMENT ERROR: Configure featured section in Sanity]",
             showFeaturedPhotos: true,
           },
+          carousel: {
+            autoplayEnabled: true,
+            intervalSeconds: 5,
+          },
           aboutSection: {
             title: "[SANITY DOCUMENT ERROR: About section not configured]",
             description:
@@ -447,6 +453,10 @@ export class SanityAdapter implements CMSAdapter {
             result.featuredSectionDescription ||
             "[SANITY ERROR: Featured description not found]",
           showFeaturedPhotos: true,
+        },
+        carousel: {
+          autoplayEnabled: result.carouselAutoplayEnabled ?? true,
+          intervalSeconds: result.carouselAutoplayInterval || 5,
         },
         aboutSection: {
           title: result.aboutTitle || "[SANITY ERROR: About title not found]",
@@ -490,6 +500,10 @@ export class SanityAdapter implements CMSAdapter {
           description:
             "[SANITY CONNECTION ERROR: Cannot fetch featured description]",
           showFeaturedPhotos: true,
+        },
+        carousel: {
+          autoplayEnabled: true,
+          intervalSeconds: 5,
         },
         aboutSection: {
           title: "[SANITY CONNECTION ERROR: Cannot fetch about title]",

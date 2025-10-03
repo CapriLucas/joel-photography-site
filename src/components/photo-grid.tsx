@@ -4,12 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import PhotoLightbox from '@/components/photo-lightbox';
 import { Photo } from '@/lib/cms/types';
 import { MapPin, Calendar } from 'lucide-react';
 
@@ -19,7 +14,18 @@ interface PhotoGridProps {
 }
 
 export default function PhotoGrid({ photos, className }: PhotoGridProps) {
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number>(-1);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  const openLightbox = (index: number) => {
+    setSelectedPhotoIndex(index);
+    setIsLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setIsLightboxOpen(false);
+    setSelectedPhotoIndex(-1);
+  };
 
   if (!photos.length) {
     return (
@@ -32,11 +38,11 @@ export default function PhotoGrid({ photos, className }: PhotoGridProps) {
   return (
     <>
       <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
-        {photos.map((photo) => (
+        {photos.map((photo, index) => (
           <Card
             key={photo.id}
             className="group cursor-pointer overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300"
-            onClick={() => setSelectedPhoto(photo)}
+            onClick={() => openLightbox(index)}
           >
             <CardContent className="p-0">
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -114,90 +120,12 @@ export default function PhotoGrid({ photos, className }: PhotoGridProps) {
         ))}
       </div>
 
-      {/* Photo Modal */}
-      <Dialog open={!!selectedPhoto} onOpenChange={() => setSelectedPhoto(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-          {selectedPhoto && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-xl font-bold">
-                  {selectedPhoto.title}
-                </DialogTitle>
-              </DialogHeader>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Image */}
-                <div className="lg:col-span-2">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
-                    <Image
-                      src={selectedPhoto.imageUrl}
-                      alt={selectedPhoto.imageAlt}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 66vw"
-                    />
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="space-y-4">
-                  {selectedPhoto.description && (
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Description</h4>
-                      <p className="text-gray-600 text-sm leading-relaxed">
-                        {selectedPhoto.description}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="space-y-3">
-                    {selectedPhoto.location && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">{selectedPhoto.location}</span>
-                      </div>
-                    )}
-
-                    {selectedPhoto.dateTaken && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-600">
-                          {selectedPhoto.dateTaken.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {selectedPhoto.tags.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Tags</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedPhoto.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="pt-4 border-t">
-                    <h4 className="font-semibold text-gray-900 mb-2">Technical Details</h4>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <div>Dimensions: {selectedPhoto.metadata.width} × {selectedPhoto.metadata.height}</div>
-                      <div>Format: {selectedPhoto.metadata.format.toUpperCase()}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <PhotoLightbox
+        photos={photos}
+        initialIndex={selectedPhotoIndex}
+        isOpen={isLightboxOpen}
+        onClose={closeLightbox}
+      />
     </>
   );
 }

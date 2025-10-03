@@ -66,6 +66,10 @@ export interface HomePage {
     description: string;
     showFeaturedPhotos: boolean;
   };
+  carousel?: {
+    autoplayEnabled: boolean;
+    intervalSeconds: number;
+  };
   aboutSection: {
     title: string;
     description: string;
