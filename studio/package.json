@@ -1,0 +1,23 @@
+{
+  "name": "joel-photography-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio for Joel Wildlife Photography",
+  "keywords": [
+    "sanity"
+  ],
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^4.10.2",
+    "sanity": "^4.10.2",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@types/react": "^18"
+  }
+}
