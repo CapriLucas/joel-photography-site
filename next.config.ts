@@ -3,26 +3,25 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog'],
+    optimizePackageImports: ["lucide-react", "@radix-ui/react-dialog"],
   },
 
   // Image optimization for external domains
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        pathname: "/images/**",
       },
     ],
-    formats: ['image/webp', 'image/avif'],
+    formats: ["image/webp", "image/avif"],
   },
 
   // Compression
@@ -33,7 +32,7 @@ const nextConfig: NextConfig = {
 
   // Generate build-time sitemap
   async generateBuildId() {
-    return 'wildlife-photography-' + Date.now();
+    return "wildlife-photography-" + Date.now();
   },
 };
 
